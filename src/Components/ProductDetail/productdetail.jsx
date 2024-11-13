@@ -2,6 +2,9 @@ import { Box, Button, CircularProgress, Grid, Rating, Typography } from "@mui/ma
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import ShareIcon from '@mui/icons-material/Share';
 
 const Productdetails = () => {
   const [productDetail, setProductDetail] = useState([]);
@@ -51,7 +54,17 @@ const Productdetails = () => {
             </Typography>
             <Typography variant="h5" className="mt-3">${productDetail?.price}</Typography>
             <Rating className="mt-3" name="half-rating-read" defaultValue={3.5} precision={0.5} readOnly />
-            <Button variant="outlined" color="error" className="ms-4 mb-3">Add To Cart</Button>
+            <Box className="d-flex gap-4 mt-4">
+              <Button  variant="outlined">
+                    <FavoriteBorderIcon/>
+              </Button>
+              <Button variant="outlined">
+                    <AddShoppingCartIcon/>
+              </Button>
+              <Button variant="outlined">
+                    <ShareIcon/>
+              </Button>
+            </Box>
           </Grid>
         </Grid>
       )}

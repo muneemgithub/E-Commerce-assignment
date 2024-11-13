@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   Card,
   CircularProgress,
@@ -24,6 +25,9 @@ export const Products = () => {
   const [openAlert, setOpenAlert] = useState(false);
   const [products, setproducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState({});
+  const [allProducts, setAllProducts] = useState([]);
   const navigate = useNavigate();
 
   console.log(isLoading, "isLoading");
@@ -65,6 +69,20 @@ export const Products = () => {
         if (productsData.status === 200) {
           setIsLoading(false);
           setproducts(productsData?.data);
+          setAllProducts(productsData?.data);
+
+          const filterCategories = productsData?.data?.map((product) => {
+            return {
+              label: product?.category,
+              value: product?.category,
+            };
+          });
+
+          const uniqueCategories = filterCategories.filter(
+            (item, index, self) =>
+              index === self.findIndex((t) => t.value === item.value)
+          );
+          setCategoryOptions(uniqueCategories);
         } else {
           setIsLoading(true);
         }
@@ -74,14 +92,31 @@ export const Products = () => {
     };
     fetchProducts();
   }, []);
+  useEffect(() => {
+    let filteredProducts = allProducts.filter(
+      (product) => product?.category === categoryFilter?.value
+    );
+    setproducts(filteredProducts);
+    console.log(filteredProducts, 'filteredProducts');
+  }, [categoryFilter]);
 
   return (
     <>
-      <Box className="container mt-3">
+      <Box className="container mt-3 d-flex justify-content-between">
         <TextField
           onChange={searchHandler}
           size="small"
           placeholder="Search Items..."
+        />
+        <Autocomplete
+          disablePortal
+          options={categoryOptions}
+          sx={{ width: 240 }}
+          size="small"
+          onChange={(e, newValue) => {
+            setCategoryFilter(newValue);
+          }}
+          renderInput={(params) => <TextField {...params} label="Categorios" />}
         />
       </Box>
       <Snackbar
