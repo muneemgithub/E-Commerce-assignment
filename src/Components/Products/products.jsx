@@ -19,8 +19,10 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../slice/add-cart/addCartSlice";
+import { addProduct } from "../../slice/product/productSlice";
+import { ToastContainer, toast } from 'react-toastify';
 
 export const Products = () => {
   const [CardList, setCardList] = useState([]);
@@ -32,10 +34,12 @@ export const Products = () => {
   const [allProducts, setAllProducts] = useState([]);
   const navigate = useNavigate();
 
+  const {isToast} = useSelector((state) => state.products);
   const dispatch = useDispatch()
 
 
-  console.log(isLoading, "isLoading");
+  console.log(toast, "toast");
+  
 
   const cartHandler = (product) => {
     const isExist = CardList.find((cart) => cart.id === product.id);
@@ -63,6 +67,7 @@ export const Products = () => {
   };
 
   useEffect(() => {
+    
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
@@ -105,8 +110,14 @@ export const Products = () => {
     console.log(filteredProducts, 'filteredProducts');
   }, [categoryFilter]);
 
+  useEffect(()=>{
+    if(isToast){
+      toast("Product already added!")
+    }
+  },[isToast])
   return (
     <>
+     <ToastContainer />
       <Box className="container mt-3 d-flex justify-content-between">
         <TextField
           onChange={searchHandler}
@@ -151,6 +162,8 @@ export const Products = () => {
       ) : (
         <Grid container className="container mt-3">
           {products?.map((product, index) => {
+            
+            
             return (
               <Grid item xs={12} md={3} mb={2}>
                 <Card
@@ -192,7 +205,7 @@ export const Products = () => {
                       </Tooltip>
                       <Tooltip title="Add to Cart">
                         <ShoppingCartIcon
-                           onClick={()=>dispatch(addToCart())}
+                           onClick={()=>dispatch(addProduct(product))}
                         />
                       </Tooltip>
                     </Box>

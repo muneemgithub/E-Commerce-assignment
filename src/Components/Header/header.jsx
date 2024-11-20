@@ -19,6 +19,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import CardList from '../card-list/CardList';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -252,7 +253,7 @@ export default function Header() {
       {renderMobileMenu}
       {renderMenu}
 
-{/* <CardList open={open} toggleDrawer = {toggleDrawer} /> */}
+<CardList open={open} toggleDrawer = {toggleDrawer} />
 
     </Box>
 
