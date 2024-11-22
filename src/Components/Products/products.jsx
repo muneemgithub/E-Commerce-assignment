@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../slice/add-cart/addCartSlice";
 import { addProduct } from "../../slice/product/productSlice";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 
 export const Products = () => {
   const [CardList, setCardList] = useState([]);
@@ -34,12 +34,9 @@ export const Products = () => {
   const [allProducts, setAllProducts] = useState([]);
   const navigate = useNavigate();
 
-  const {isToast} = useSelector((state) => state.products);
-  const dispatch = useDispatch()
+  const { isToast, isProductAdded } = useSelector((state) => state.products);
+  const dispatch = useDispatch();
 
-
-  console.log(toast, "toast");
-  
 
   const cartHandler = (product) => {
     const isExist = CardList.find((cart) => cart.id === product.id);
@@ -67,7 +64,6 @@ export const Products = () => {
   };
 
   useEffect(() => {
-    
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
@@ -97,7 +93,6 @@ export const Products = () => {
           setIsLoading(true);
         }
       } catch (err) {
-        console.log(err);
       }
     };
     fetchProducts();
@@ -107,17 +102,20 @@ export const Products = () => {
       (product) => product?.category === categoryFilter?.value
     );
     setproducts(filteredProducts);
-    console.log(filteredProducts, 'filteredProducts');
+    console.log(filteredProducts, "filteredProducts");
   }, [categoryFilter]);
 
-  useEffect(()=>{
-    if(isToast){
-      toast("Product already added!")
+  useEffect(() => {
+    if (isToast) {
+      toast("Product already added!");
     }
-  },[isToast])
+    if (isProductAdded) {
+      toast("Product Added Successfully!");
+    }
+  }, [isToast, isProductAdded]);
   return (
     <>
-     <ToastContainer />
+      <ToastContainer />
       <Box className="container mt-3 d-flex justify-content-between">
         <TextField
           onChange={searchHandler}
@@ -162,8 +160,6 @@ export const Products = () => {
       ) : (
         <Grid container className="container mt-3">
           {products?.map((product, index) => {
-            
-            
             return (
               <Grid item xs={12} md={3} mb={2}>
                 <Card
@@ -205,7 +201,7 @@ export const Products = () => {
                       </Tooltip>
                       <Tooltip title="Add to Cart">
                         <ShoppingCartIcon
-                           onClick={()=>dispatch(addProduct(product))}
+                          onClick={() => dispatch(addProduct(product))}
                         />
                       </Tooltip>
                     </Box>
